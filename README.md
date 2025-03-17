@@ -48,10 +48,6 @@ This project is an AI-powered speech recognition system that enables users to se
 ## HTML File Components
 The **frontend** of this project is built using `index.html`, which contains various components:
 
-### 🔹 Theme Selector
-- Allows users to toggle between **light and dark mode**.
-- Users can switch themes with the **theme button**.
-
 ### 🔹 Chat Interface
 - **Chat container**: Displays messages between the user and the AI assistant.
 - **Chat input box**: Allows text-based input and displays results.
@@ -81,7 +77,7 @@ The **frontend** of this project is built using `index.html`, which contains var
    - The **BERT-based NLP model** processes the input and identifies the relevant job category and title.
 
 3. **Service Retrieval**:
-   - The system queries an external **API (https://api.menrol.com/api/v1/getServices)** to fetch available services.
+   - The system queries an external **API (https://api.************)** to fetch available services.
    - If a **category is mentioned** (e.g., "Plumber"), all services under that category are displayed.
    - If a **specific job title** is mentioned (e.g., "Drain Specialist"), it directly retrieves that service’s details.
 
