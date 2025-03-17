@@ -1,5 +1,5 @@
 # VOICE-JOB-FINDER
-# AI-Powered Speech Recognition System
+
 
 ## Overview
 This project is an AI-powered speech recognition system that enables users to search for services using voice commands. The system supports both Hindi and English and leverages Natural Language Processing (NLP) to accurately interpret queries. It features a responsive web interface, an optimized backend, and efficient data handling for seamless service retrieval.
