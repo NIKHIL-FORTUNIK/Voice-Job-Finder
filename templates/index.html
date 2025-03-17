@@ -1,0 +1,1346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Assistant</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-blue: #1a73e8;
+            --secondary-blue: #1557b0;
+            --glass-bg: rgba(255, 255, 255, 0.4);
+            --glass-border: rgba(255, 255, 255, 0.5);
+            --accent-blue: #8ab4f8;
+            --bg-color: #f8f9ff;
+            --text-color: #2d3748;
+        }
+        /* Radio Button Styling */
+        .radio-label {
+            display: block;
+            position: relative;
+            padding-left: 35px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            font-size: 16px;
+            user-select: none;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            transition: all 0.3s ease;
+        }
+
+        .radio-label:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .radio-label input {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+            height: 0;
+            width: 0;
+        }
+
+        .checkmark {
+            position: absolute;
+            top: 50%;
+            left: 15px;
+            transform: translateY(-50%);
+            height: 20px;
+            width: 20px;
+            background-color: #eee;
+            border-radius: 50%;
+            border: 2px solid #1a73e8;
+        }
+
+        .radio-label:hover input ~ .checkmark {
+            background-color: #e1e1e1;
+        }
+
+        .radio-label input:checked ~ .checkmark {
+            background-color: #1a73e8;
+            border-color: #1a73e8;
+        }
+
+        .checkmark:after {
+            content: "";
+            position: absolute;
+            display: none;
+            left: 6px;
+            top: 6px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: white;
+        }
+
+        .radio-label input:checked ~ .checkmark:after {
+            display: block;
+        }
+
+        /* Service Info Styling */
+        .service-info {
+            margin-left: 30px;
+        }
+
+        .service-title {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 4px;
+        }
+
+        .service-category {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 8px;
+        }
+
+        .service-description {
+            color: #444;
+            font-size: 0.95em;
+            line-height: 1.4;
+            margin-bottom: 8px;
+        }
+
+        .pricing {
+            color: #4CAF50;
+            font-weight: 500;
+            font-size: 0.95em;
+        }
+
+        /* Action Button Styling */
+        .action-button {
+            margin-top: 1.5rem;
+            padding: 12px 24px;
+            background: #1a73e8;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s ease;
+        }
+
+        .action-button:hover {
+            background: #1557b0;
+            transform: translateY(-2px);
+        }
+
+        [data-theme="purple"] {
+            --primary-blue: #7c4dff;
+            --secondary-blue: #651fff;
+            --glass-bg: rgba(255, 255, 255, 0.4);
+            --glass-border: rgba(255, 255, 255, 0.5);
+            --accent-blue: #b388ff;
+            --bg-color: #f3e5f5;
+            --text-color: #2d3748;
+        }
+
+        /* Theme Selector Updates */
+        .theme-selector {
+            position: fixed;
+            top: 1.5rem;
+            right: 1.5rem;
+            z-index: 1000;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .theme-button {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            width: 20px;
+            height: 20px;
+            border-radius: 10%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .theme-button:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: rotate(15deg);
+        }
+
+        .theme-options {
+            position: absolute;
+            top: 120%;
+            right: 0;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border-radius: 12px;
+            padding: 0.5rem;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+            display: none;
+            min-width: 120px;
+            border: 1px solid var(--glass-border);
+        }
+
+        .theme-option {
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: var(--text-color);
+            font-size: 0.9rem;
+        }
+        .download-section {
+    margin-top: 1.5rem;
+    text-align: center;
+}
+
+.download-button {
+    background: var(--primary-blue);
+    color: white;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.download-button:hover {
+    background: var(--secondary-blue);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(26, 115, 232, 0.2);
+}
+/* Interactive Elements Feedback */
+.action-prompt {
+    color: #666;
+    font-style: italic;
+    margin-top: 1rem;
+}
+
+.success-message {
+    color: #4CAF50;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.error-header {
+    color: #f44336;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.service-info {
+    margin-left: 1.5rem;
+}
+
+.input-group {
+    margin: 1rem 0;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--text-color);
+}
+
+.input-group input {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+.download-button i {
+    font-size: 1.1rem;
+    margin-right: 0.5rem;
+}
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-color);
+            color: var(--text-color);
+            transition: background 0.3s ease, color 0.3s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 1rem;
+        }
+
+        .chat-container {
+            width: 98%;
+            max-width: 1400px;
+            height: 90vh;
+            background: var(--glass-bg);
+            backdrop-filter: blur(32px) saturate(200%);
+            border-radius: 24px;
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 24px 64px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            padding-bottom: 2rem;
+        }
+
+        .chat-header {
+            text-align: center;
+            border-bottom: 1px solid var(--glass-border);
+            background: rgba(255, 255, 255, 0.6);
+        }
+/* Add these styles for the bill display */
+.bill-details {
+    margin: 1rem 0;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 8px;
+    border: 1px solid #ddd;
+}
+
+.bill-row {
+    display: flex;
+    justify-content: space-between;
+    margin: 0.5rem 0;
+    padding: 0.5rem;
+    border-bottom: 1px solid #eee;
+}
+
+.bill-key {
+    font-weight: 600;
+    color: #2d3748;
+}
+
+.bill-value {
+    color: #4a5568;
+}
+
+.action-button {
+    margin-top: 1rem;
+    width: 100%;
+    padding: 12px;
+    font-size: 1rem;
+}
+        .chat-header h1 {
+            padding-top: 2rem;
+            padding-bottom: 2rem;
+            right: 50%;
+            left: 50%;
+            font-weight: 700;
+            font-size: 2rem;
+            letter-spacing: -0.5px;
+            color: var(--primary-blue);
+            text-shadow: 0 2px 4px rgba(26, 115, 232, 0.1);
+        }
+
+        .chat-box {
+            flex: 1;
+            padding: 2rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .chat-box.blurred {
+                filter: blur(4px);
+                transition: filter 0.3s ease;
+            }
+
+        .chat-box::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .chat-box::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+        }
+
+        .chat-box::-webkit-scrollbar-thumb {
+            background: var(--primary-blue);
+            border-radius: 4px;
+        }
+
+        .results-container {
+    line-height: 1.6;
+}
+
+.result-section {
+    margin: 1.5rem 0;
+    padding-left: 1rem;
+    border-left: 3px solid var(--accent-blue);
+}
+
+.result-section strong {
+    display: block;
+    margin-top: 0.5rem;
+    color: var(--primary-blue);
+}
+        .message {
+            max-width: 75%;
+            padding: 1.5rem;
+            border-radius: 16px;
+            animation: fadeIn 0.3s ease forwards, float 4s ease-in-out infinite;
+            backdrop-filter: blur(16px);
+            line-height: 1.6;
+            position: relative;
+            transition: transform 0.2s ease;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.05);
+        }
+
+        .user-message {
+            background: rgba(26, 115, 232, 0.1);
+            border: 1px solid var(--primary-blue);
+            align-self: flex-end;
+        }
+
+        .bot-message {
+            background: rgba(255, 255, 255, 0.8);
+            border: 1px solid var(--glass-border);
+            align-self: flex-start;
+        }
+
+        .bot-message.irrelevant {
+            background: rgba(255, 0, 0, 0.1); /* Red tint for irrelevant responses */
+            border: 1px solid red; /* Red border */
+        }
+        .chat-input-container {
+            position: relative;
+            height: 120px;
+            padding-bottom: 30px;
+        }
+
+        .input-options {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .action-button {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: var(--primary-blue);
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 8px 24px rgba(26, 115, 232, 0.2);
+            position: relative;
+        }
+
+        .action-button.listening {
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        .action-button i {
+            font-size: 2rem;
+            color: white;
+            transition : transform 0.3s ease;
+        }
+
+        .action-button.active {
+            transform: scale(1.2);
+            box-shadow: 0 12px 32px rgba(26, 115, 232, 0.3);
+            background: var(--secondary-blue);
+        }
+
+        .language-toggle {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #e2e8f0;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: var(--primary-blue);
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        .text-input-container {
+            position: absolute;
+            bottom: calc(100% + 10px);
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 600px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 1rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            z-index: 100;
+            display: none;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 1.25rem 2rem;
+            border-radius: 50px;
+            border: 2px solid var(--glass-border);
+            background: rgba(255, 255, 255, 0.9);
+            color: var(--text-color);
+            font-size: 1.1rem;
+            padding-right: 4.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 3px rgba(138, 180, 248, 0.3);
+        }
+
+        .search-submit {
+            position: absolute;
+            right: 5%;
+            top: 50%;
+            bottom: 50%;
+            transform: translateY(-50%);
+            background: var(--primary-blue);
+            border: none;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-4px); }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.15); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 768px) {
+            .text-input-container {
+                width: 95%;
+                bottom: calc(100% + 5px);
+            }
+        }
+
+            .message {
+                max-width: 85%;
+            }
+
+            .action-button {
+                width: 60px;
+                height: 60px;
+            }
+        
+
+        .theme-selector {
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            z-index: 1000;
+        }
+
+        .theme-button {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            padding: 0.8rem 1.2rem;
+            border-radius: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .theme-button:hover {
+        background: rgba(255, 255, 255, 0.2);
+            }
+        .bill-step {
+        display: none;
+        padding: 1rem;
+        margin: 1rem 0;
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 12px;
+        border: 1px solid var(--glass-border);
+    }
+
+    .bill-step.active {
+        display: block;
+        animation: slideDown 0.3s ease;
+    }
+
+    .bill-table {
+        width: 100%;
+        margin: 1rem 0;
+        border-collapse: collapse;
+    }
+
+    .bill-table td {
+        padding: 0.8rem;
+        border-bottom: 1px solid var(--glass-border);
+    }
+
+        .theme-options {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border-radius: 12px;
+            padding: 0.5rem;
+            margin-top: 0.5rem;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+
+        .theme-option {
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .theme-option:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .show-themes {
+            display: block;
+        }
+        /* Cart Styles */
+.cart-icon {
+    position: fixed;
+    top: 2rem;
+    right: 6rem;
+    cursor: pointer;
+    z-index: 1000;
+    font-size: 1.5rem;
+    color: var(--text-color);
+    background: var(--glass-bg);
+    padding: 0.8rem;
+    border-radius: 50%;
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(10px);
+}
+#cartContainer {
+    max-width: 500px;  /* ✅ Adjust width */
+    max-height: 500px; /* ✅ Increase height */
+    overflow-y: auto;  /* ✅ Enable scrolling if content exceeds */
+    background-color: #f9f9f9;
+    padding: 15px;
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* ✅ Style individual cart items */
+.cart-item {
+    border-bottom: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+/* ✅ Improve remove button appearance */
+.cart-item button {
+    background-color: #ff4d4d;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.cart-item button:hover {
+    background-color: #cc0000;
+}
+
+
+.cart-count {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: var(--primary-blue);
+    color: white;
+    border-radius: 50%;
+    padding: 2px 6px;
+    font-size: 0.8rem;
+}
+
+.cart-modal {
+    display: none;
+    position: fixed;
+    top: 5rem;
+    right: 2rem;
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    padding: 1rem;
+    width: 350px;
+    max-height: 60vh;
+    overflow-y: auto;
+    z-index: 1000;
+}
+
+
+
+.remove-item {
+    color: #ff4444;
+    cursor: pointer;
+    margin-left: 1rem;
+}
+
+.checkout-btn {
+    background: var(--primary-blue);
+    color: white;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: 1rem;
+    width: 100%;
+}
+    </style>
+</head>
+<body>
+    <div class="theme-selector">
+        <button class="theme-button" onclick="toggleThemes()">
+            <img style="width: 100px; height: 100px; " src="static\images\om.png"></img>
+        </button>
+        <div class="theme-options" id="themeOptions">
+            <div class="theme-option" data-theme="light">Light</div>
+            <div class="theme-option" data-theme="purple">Purple</div>
+        </div>
+    </div>
+
+    <div class="chat-container">
+        <div class="chat-header">
+            <h1>AI Assistant</h1>
+        </div>
+        <div class="cart-icon" onclick="toggleCart()">
+            <i class="fas fa-shopping-cart"></i>
+            <span class="cart-count" id="cartCount">0</span>
+        </div>
+        
+        <!-- Cart Modal -->
+        <div class="cart-modal" id="cartModal">
+            <div class="cart-content" id="cartContainer">
+                <h3>Your Cart</h3>
+                <div class="cart-items" id="cartItems">
+                    <!-- Cart items will be dynamically added here -->
+                </div>
+                <div class="cart-actions">
+                    <button class="checkout-btn" onclick="handleCheckout()">Checkout</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="chat-box" id="chat-box"></div>
+
+        <div class="chat-input-container">
+            <div class="input-options">
+                <div class="action-buttons">
+                    <button class="action-button" id="micButton" onclick="startSpeechRecognition()">
+                        <i class="fas fa-microphone"></i>
+                    </button>
+                    <button class="action-button" id="searchButton" onclick="toggleTextInput()">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+                
+                <div class="language-toggle">
+                    <span>English</span>
+                    <label class="switch">
+                        <input type="checkbox" id="languageToggle">
+                        <span class="slider"></span>
+                    </label>
+                    <span>Hindi</span>
+                </div>
+
+            <div class="text-input-container" id="textInputContainer">
+                <input type="text" class="search-input" id="searchInput" placeholder="Type your query...">
+                <button class="search-submit" onclick="processTextInput()">
+                    <i class="fas fa-arrow-right" style="color: white;"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <script>
+        // Voice Command System
+    // Voice Command System
+let billData = {};
+let selectedLanguage = "en-IN";
+let recognition = null;
+let recognitionLock = false;
+
+// Cart Management
+let cartVisible = false;
+
+// UI Elements
+const chatBox = document.getElementById('chat-box');
+const cartCount = document.getElementById('cartCount');
+const cartItems = document.getElementById('cartItems');
+
+function startSpeechRecognition() {
+    
+
+    const chatBox = document.getElementById('chat-box');
+    const initialMessage = chatBox.querySelector('.bot-message:first-child');
+    chatBox.innerHTML = '';
+    if(initialMessage) chatBox.appendChild(initialMessage.cloneNode(true));
+
+    // Create new recognition instance each time
+    const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+    
+    // Set language properly
+    recognition.lang = selectedLanguage;
+    recognition.continuous = false;
+    recognition.interimResults = false;
+// Language Handling
+document.getElementById('languageToggle').addEventListener('change', function() {
+    selectedLanguage = this.checked ? "hi-IN" : "en-IN"; // Correct language codes
+    localStorage.setItem('selectedLanguage', selectedLanguage); // Persist choice
+});
+
+// Initialize language from storage
+selectedLanguage = localStorage.getItem('selectedLanguage') || "en-IN";
+document.getElementById('languageToggle').checked = (selectedLanguage === "hi-IN");
+
+    recognition.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        showUserMessage(transcript);
+        processQuery(transcript);
+        micBtn.classList.remove('listening');
+        recognitionLock = false;
+    };
+
+    recognition.onerror = (event) => {
+        micBtn.classList.remove('listening');
+        recognitionLock = false;
+        console.error('Recognition error:', event.error);
+        showError(`Voice recognition error: ${event.error}`);
+    };
+
+    recognition.start();
+}
+
+function toggleTextInput() {
+    const textInput = document.getElementById('textInputContainer');
+    const chatBox = document.getElementById('chat-box');
+    
+    if (textInput.style.display === 'none' || !textInput.style.display) {
+        textInput.style.display = 'block';
+        chatBox.classList.add('blurred');
+        document.getElementById('searchInput').focus();
+    } else {
+        textInput.style.display = 'none';
+        chatBox.classList.remove('blurred');
+    }
+}
+function processTextInput() {
+    const input = document.getElementById('searchInput');
+    const query = input.value.trim();
+    
+    if (query) {
+        // Clear previous session
+        const chatBox = document.getElementById('chat-box');
+        const initialMessage = chatBox.querySelector('.bot-message:first-child');
+        chatBox.innerHTML = '';
+        if(initialMessage) chatBox.appendChild(initialMessage.cloneNode(true));
+        
+        showUserMessage(query);
+        processQuery(query);
+        input.value = '';
+    }
+    toggleTextInput();
+}
+// Core Functions
+function startVoiceRecognition() {
+    if (recognitionLock) return;
+    recognitionLock = true;
+    
+    const micBtn = document.getElementById('micButton');
+    micBtn.classList.add('listening');
+
+    const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+    recognition.lang = selectedLanguage;
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+
+    recognition.onresult = (event) => {
+        const command = event.results[0][0].transcript;
+        showUserMessage(command);
+        processQuery(command);
+        micBtn.classList.remove('listening');
+        recognitionLock = false;
+    };
+
+    recognition.onerror = () => {
+        micBtn.classList.remove('listening');
+        recognitionLock = false;
+    };
+
+    recognition.start();
+}
+async function handleAddToCart() {
+    try {
+        const pricingType = document.querySelector('input[name="pricing"]:checked').value;
+        const workers = document.getElementById("workers").value;
+        const days = document.getElementById("days").value;
+        const location = document.getElementById("location").value;
+
+        const response = await fetch('/process_bill', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ pricing_type: pricingType, workers, days, location })
+        });
+
+        const data = await response.json();
+
+        if (data.error) {
+            showError(data.error);  // ✅ Show error when trying to add different category
+        } else {
+            alert(data.message);
+            updateCartDisplay();
+        }
+    } catch (error) {
+        showError("⚠️ Failed to add item to cart.");
+    }
+}
+
+
+async function processQuery(query) {
+    try {
+        showLoadingIndicator();
+        
+        const response = await fetch('/chat', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ message: query })
+        });
+
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.error || `Request failed with status ${response.status}`);
+        }
+
+        const data = await response.json();
+        removeLoadingIndicator();
+
+        if (data.error) {
+            showError(data.error);
+        } else if (data.results) {
+            showServiceSelection(data.results);
+        } else {
+            showBotResponse(data);
+        }
+    } catch (error) {
+        removeLoadingIndicator();
+        showError(error.message);
+        console.error('Processing error:', error);
+    }
+}
+document.getElementById('searchInput').addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+        processTextInput();
+    }
+});
+// Service Selection Flow
+function showServiceSelection(services) {
+    const container = document.createElement('div');
+    container.className = 'message bot-message';
+    // Modify how service options are displayed
+container.innerHTML = `
+    <h3>Select a Service:</h3>
+    ${services.map((service, index) => `
+        <div class="service-option">
+            <input type="radio" id="service${index}" name="service" data-title="${service.title}">
+            <label for="service${index}">
+                <strong>${service.title}</strong><br>
+                <span class="category">${service.category}</span><br>
+                <span class="description">${service.description}</span>
+                <ul>
+                    ${service.pricing.map(price => `<li>${price}</li>`).join('')}
+                    </ul>
+                <br></br>
+            </label>
+        </div>
+    `).join('')}
+    <button class="action-button" onclick="handleServiceSelection()">Select →</button>
+`;
+
+    
+    chatBox.appendChild(container);
+    chatBox.scrollTop = chatBox.scrollHeight;
+}
+
+async function handleServiceSelection() {
+    const selected = document.querySelector('input[name="service"]:checked');
+    if (!selected) {
+        showError("Please select a service first");
+        return;
+    }
+
+    // Extract the service title instead of an index
+    const serviceTitle = selected.dataset.title;
+
+    try {
+        const response = await fetch('/select_service', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ selected_title: serviceTitle }) // Send title instead of index
+        });
+
+        const data = await response.json();
+        if (data.error) throw new Error(data.error);
+
+        showPricingSelection(data.options);
+    } catch (error) {
+        showError(error.message);
+    }
+}
+
+function showPricingSelection(options) {
+    const container = document.createElement('div');
+    container.className = 'message bot-message';
+    container.innerHTML = `
+        <h3>Select Pricing Plan:</h3>
+        ${options.map((option, index) => `
+            <div class="pricing-option">
+                <input type="radio" id="price${index}" name="pricing" value="${option}">
+                <label for="price${index}">${option}</label>
+            </div>
+        `).join('')}
+        <button class="action-button" onclick="handlePricingSelection()">Next →</button>
+    `;
+    
+    chatBox.appendChild(container);
+    chatBox.scrollTop = chatBox.scrollHeight;
+}
+
+async function handlePricingSelection() {
+    const selected = document.querySelector('input[name="pricing"]:checked');
+    if (!selected) {
+        showError("Please select a pricing option");
+        return;
+    }
+    
+    billData.pricing_type = selected.value;
+    showJobDetailsForm();
+}
+
+function showJobDetailsForm() {
+    const container = document.createElement('div');
+    container.className = 'message bot-message';
+    container.innerHTML = `
+        <h3>Enter Job Details:</h3>
+        <div class="form-group">
+            <label>Number of Workers:</label>
+            <input type="number" id="workers" min="1" value="1" class="form-input">
+        </div>
+        <div class="form-group">
+            <label>Number of Days:</label>
+            <input type="number" id="days" min="1" value="1" class="form-input">
+        </div>
+        <div class="form-group">
+            <label>Location:</label>
+            <input type="text" id="location" placeholder="Enter location" class="form-input">
+        </div>
+        <button class="action-button" onclick="submitJobDetails()">Add to Cart 🛒</button>
+    `;
+    
+    chatBox.appendChild(container);
+    chatBox.scrollTop = chatBox.scrollHeight;
+}
+
+async function submitJobDetails() {
+    const workers = document.getElementById('workers').value;
+    const days = document.getElementById('days').value;
+    const location = document.getElementById('location').value;
+
+    if (!workers || !days || !location) {
+        showError("Please fill all fields");
+        return;
+    }
+
+    try {
+        const response = await fetch('/process_bill', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                pricing_type: billData.pricing_type, // Ensure this is set correctly
+                workers: parseInt(workers),
+                days: parseInt(days),
+                location: location.trim()
+            })
+        });
+        
+        const data = await response.json();
+        if (data.error) throw new Error(data.error);
+        
+        showSuccessMessage("✅ Item added to cart!");
+        updateCartDisplay();
+    } catch (error) {
+        showError(error.message);
+    }
+}
+// Cart Management Functions
+async function updateCartDisplay() {
+    try {
+        const response = await fetch('/cart');
+        const data = await response.json();
+        
+        const cartContainer = document.getElementById("cartContainer");
+        const cartItems = document.getElementById("cartItems");
+        const cartCount = document.getElementById("cartCount");
+        const checkoutButton = document.querySelector(".checkout-btn");
+
+        if (!cartContainer || !cartItems || !cartCount || !checkoutButton) {
+            console.error("❌ 'cartContainer', 'cartItems', 'cartCount', or 'checkout-btn' not found.");
+            return;
+        }
+
+        // ✅ Update cart count
+        cartCount.textContent = data.cart.length;
+
+        if (data.cart.length === 0) {
+            cartItems.innerHTML = `<p style="color: red; text-align: center;">🛒 Cart is empty!</p>`;
+            checkoutButton.disabled = true;  // ✅ Disable checkout button
+            checkoutButton.style.backgroundColor = "#ccc";  // Grey out button
+        } else {
+            checkoutButton.disabled = false;  // ✅ Enable button if cart is not empty
+            checkoutButton.style.backgroundColor = "#4CAF50";  // Restore button color
+            cartItems.innerHTML = data.cart.map((item, index) => `
+                <div class="cart-item">
+                    <h4>${item['Service Name']}</h4>
+                    <p><strong>Category:</strong> ${item['Service Category']}</p>
+                    <p><strong>Pricing Plan:</strong> ${item['Pricing Plan']}</p>
+                    <p><strong>Selected Price Range:</strong> ${item['Price Range']}</p>
+                    <p><strong>Workers:</strong> ${item['Number of Workers']} | <strong>Days:</strong> ${item['Service Duration (Days)']}</p>
+                    <p><strong>Location:</strong> ${item['Service Location']}</p>
+                    <button onclick="removeFromCart(${index})">❌ Remove</button>
+                </div>
+            `).join('');
+        }
+    } catch (error) {
+        showError("⚠️ Failed to load cart items.");
+    }
+}
+
+
+
+
+async function removeFromCart(index) {
+    try {
+        const response = await fetch('/remove_from_cart', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ index: index })
+        });
+
+        const data = await response.json();
+
+        if (!data.success) {
+            showError("⚠️ Failed to remove item.");
+            return;
+        }
+
+        updateCartDisplay();  // ✅ Refresh cart count after removing item
+    } catch (error) {
+        showError("⚠️ Failed to remove item.");
+    }
+}
+
+
+
+async function handleCheckout() {
+    const email = prompt("Please enter your email for invoice delivery:");
+    if (!email) return;
+
+    try {
+        const response = await fetch('/send_invoice', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: email })
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || "Failed to process checkout.");
+        }
+
+        const data = await response.json();
+        alert("✅ " + data.message);
+        updateCartDisplay(); // ✅ Refresh cart after checkout
+    } catch (error) {
+        console.error("🚨 Checkout failed:", error);
+        showError("⚠️ Error: " + error.message);
+    }
+}
+
+// UI Helpers
+function showUserMessage(text) {
+    const div = document.createElement('div');
+    div.className = 'message user-message';
+    div.textContent = text;
+    chatBox.appendChild(div);
+}
+
+function showBotResponse(data) {
+    const div = document.createElement('div');
+    div.className = 'message bot-message' + (data.error ? ' error' : '');
+    
+    if (data.error) {
+        div.innerHTML = `
+            <div class="error-header">⚠️ Error</div>
+            <div class="error-content">${data.error}</div>
+        `;
+    } else {
+        div.textContent = data.response || '';
+    }
+    
+    chatBox.appendChild(div);
+    chatBox.scrollTop = chatBox.scrollHeight;
+}
+
+function showLoadingIndicator() {
+    const loadingDiv = document.createElement('div');
+    loadingDiv.className = 'message bot-message loading';
+    loadingDiv.innerHTML = '<div class="loading-dots"><div></div><div></div><div></div></div>';
+    chatBox.appendChild(loadingDiv);
+}
+
+function removeLoadingIndicator() {
+    const loading = document.querySelector('.loading');
+    if (loading) loading.remove();
+}
+
+function clearChatMessages() {
+    chatBox.innerHTML = '';
+}
+
+function showError(message) {
+    const div = document.createElement('div');
+    div.className = 'message bot-message error';
+    div.textContent = `⚠️ Error: ${message}`;
+    chatBox.appendChild(div);
+    chatBox.scrollTop = chatBox.scrollHeight;
+}
+
+function showSuccessMessage(message) {
+    const div = document.createElement('div');
+    div.className = 'message bot-message success';
+    div.textContent = message;
+    chatBox.appendChild(div);
+    chatBox.scrollTop = chatBox.scrollHeight;
+}
+
+// Cart Modal Control
+function toggleCart() {
+    const modal = document.getElementById('cartModal');
+    cartVisible = !cartVisible;
+    modal.style.display = cartVisible ? 'block' : 'none';
+    if (cartVisible) updateCartDisplay();
+}
+
+// Event Listeners
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('searchInput').addEventListener('keypress', e => {
+        if (e.key === 'Enter') processTextInput();
+    });
+
+    document.querySelectorAll('.theme-option').forEach(option => {
+        option.addEventListener('click', function() {
+            document.body.setAttribute('data-theme', this.dataset.theme);
+            document.getElementById('themeOptions').classList.remove('show-themes');
+        });
+    });
+
+    // Initial cart update
+    updateCartDisplay();
+});
+
+// Initial Welcome Message
+chatBox.innerHTML = `
+    <div class="message bot-message">
+        <strong>Welcome! How can I assist you today?</strong>
+        <div class="result-section">
+            <p>Try saying:</p>
+            <p>"Find electricians near me"</p>
+            <p>"Need plumbing services"</p>
+            <p>"Show cleaning services"</p>
+        </div>
+    </div>
+`;
+</script>
+</body>
+</html>
+
