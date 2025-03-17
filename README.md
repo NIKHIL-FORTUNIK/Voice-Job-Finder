@@ -1,4 +1,4 @@
-# Voice-Job-Finder
+# VOICE-JOB-FINDER
 # AI-Powered Speech Recognition System
 
 ## Overview
@@ -45,6 +45,32 @@ This project is an AI-powered speech recognition system that enables users to se
 - Utilizes **Joblib** for model persistence and quick loading.
 - Lightweight UI with optimized JavaScript to enhance user experience.
 
+## HTML File Components
+The **frontend** of this project is built using `index.html`, which contains various components:
+
+### 🔹 Theme Selector
+- Allows users to toggle between **light and dark mode**.
+- Users can switch themes with the **theme button**.
+
+### 🔹 Chat Interface
+- **Chat container**: Displays messages between the user and the AI assistant.
+- **Chat input box**: Allows text-based input and displays results.
+- **Voice recognition button**: Enables real-time speech input.
+
+### 🔹 Service Selection UI
+- Users can select services from dynamically generated options.
+- Each service includes a **title, description, category, and pricing details**.
+- Uses **radio buttons** for selecting a pricing plan.
+
+### 🔹 Cart System
+- **Cart modal**: Shows selected services with details such as pricing and service duration.
+- **Remove item button**: Allows users to delete items from the cart.
+- **Checkout button**: Proceeds with the final invoice generation.
+
+### 🔹 Invoice Download Section
+- Provides users with a button to **download invoices**.
+- The invoice is automatically generated as a **PDF** and emailed to the user.
+
 ## Working of the System
 1. **User Interaction**:
    - The user opens the web application and is greeted with a chatbot-like interface.
@@ -55,7 +81,7 @@ This project is an AI-powered speech recognition system that enables users to se
    - The **BERT-based NLP model** processes the input and identifies the relevant job category and title.
 
 3. **Service Retrieval**:
-   - The system queries an external **API (https://api.**************)** to fetch available services.
+   - The system queries an external **API (https://api.menrol.com/api/v1/getServices)** to fetch available services.
    - If a **category is mentioned** (e.g., "Plumber"), all services under that category are displayed.
    - If a **specific job title** is mentioned (e.g., "Drain Specialist"), it directly retrieves that service’s details.
 
@@ -126,26 +152,6 @@ Ensure you have **Python 3** and **Flask** installed before proceeding.
 5. **Add the service to your cart** and proceed to checkout.
 6. Receive your **invoice via email** 📧.
 
-## API Endpoints
-| Endpoint          | Method | Description |
-|------------------|--------|-------------|
-| `/chat`          | POST   | Processes user queries and returns search results. |
-| `/select_service`| POST   | Handles service selection using a service title. |
-| `/process_bill`  | POST   | Adds selected service to the cart with billing details. |
-| `/cart`          | GET    | Retrieves all items in the cart. |
-| `/remove_from_cart` | POST | Removes a selected service from the cart. |
-| `/send_invoice`  | POST   | Sends an invoice via email to the user. |
-
-## Future Improvements
-✅ **Expand Language Support**: Include additional languages beyond Hindi and English.
-✅ **Enhance Speech Recognition**: Improve accuracy using **Deep Learning** models.
-✅ **Database Integration**: Use **SQL/NoSQL** for more efficient service management.
-✅ **Mobile App Version**: Develop an Android/iOS app for wider accessibility.
-✅ **User Authentication**: Implement **OAuth or JWT** authentication for secure user sessions.
-✅ **Service Reviews & Ratings**: Allow users to leave reviews and rate service providers.
-✅ **AI Chatbot Enhancements**: Improve chatbot intelligence with **GPT-based responses**.
-✅ **Subscription-Based Services**: Introduce plans for recurring services with automated billing.
-
 ## Contributing
 Contributions are welcome! If you’d like to improve this project, feel free to submit a pull request.
 
@@ -163,5 +169,4 @@ This project is **open-source** under the **MIT License**.
 📧 **Email:** fortunikfreelancer1@gmail.com
 
 If you have any queries, feel free to **reach out!** 🚀
-
 
